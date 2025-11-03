@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coursera AI Remover</title>
+    <style>
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #aaaaaa;
+            --border-color: #404040;
+            --accent-color: #2196F3;
+            --success-color: #10b981;
+            --error-color: #f87171;
+            --warning-color: #fbbf24;
+            --hover-bg: #2a2a2a;
+        }
+
+        body {
+            width: 300px;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .container {
+            padding: 16px;
+        }
+        
+        h1 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .status {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-align: center;
+            background: var(--bg-secondary);
+        }
+        
+        .status.enabled {
+            color: var(--success-color);
+        }
+        
+        .status.disabled {
+            color: var(--error-color);
+        }
+        
+        .status.error {
+            color: var(--warning-color);
+        }
+        
+        .toggle-button {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .toggle-button:hover {
+            background: var(--hover-bg);
+        }
+        
+        .counter-display {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .counter-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .counter-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        
+        .settings {
+            margin-bottom: 12px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .checkbox {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .stats {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .stats-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .reset-button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-tertiary);
+            font-size: 11px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .reset-button:hover {
+            background: var(--hover-bg);
+        }
+        
+        .version {
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            font-size: 10px;
+            color: var(--text-tertiary);
+        }
+
+        .lang-icon {
+            font-size: 14px;
+        }
+
+        .lang-switch {
+            display: flex;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .lang-option {
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .lang-option.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .lang-option:not(.active):hover {
+            background-color: var(--hover-bg);
+        }
+
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <h1 data-i18n="title">Coursera AI Remover</h1>
+        
+        <div id="status" class="status">
+            <span id="status-text" data-i18n="loading">Загрузка...</span>
+        </div>
+        
+        <button id="toggle" class="toggle-button" data-i18n="disableRemoval">
+            Отключить удаление
+        </button>
+        
+        <div class="counter-display">
+            <div class="counter-number" id="removed-count">0</div>
+            <div class="counter-label" data-i18n="elementsRemoved">элементов удалено</div>
+        </div>
+        
+        <div class="settings">
+            <div class="setting-item">
+                <span class="setting-label" data-i18n="removeOnLoad">Удаление при загрузке</span>
+                <input type="checkbox" id="removeOnLoad" class="checkbox">
+            </div>
+            
+            
+            <div class="setting-item">
+                <span class="setting-label" data-i18n="language">Язык</span>
+                <div class="lang-switch">
+                    <div class="lang-option active" data-lang="ru">RU</div>
+                    <div class="lang-option" data-lang="en">EN</div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="stats">
+            <div class="stats-header">
+                <div class="stats-title" data-i18n="statistics">Статистика</div>
+                <button id="reset-counter" class="reset-button" data-i18n="reset">Сбросить</button>
+            </div>
+        </div>
+        
+        <div class="version" data-i18n="version">
+            v2.0.0 - Coursera AI Instructions Remover
+        </div>
+    </div>
+    
+    <script src="locales.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Coursera AI Instructions Remover",
+  "version": "2.0.0",
+  "description": "Расширение для автоматического удаления элементов с AI-инструкциями на Coursera с функциональным счетчиком и toast уведомлениями",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.coursera.org/*",
+    "*://coursera.org/*",
+    "file://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.coursera.org/*",
+        "*://coursera.org/*",
+        "file://*/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["locales.js"],
+      "matches": ["*://*.coursera.org/*", "*://coursera.org/*", "file://*/*"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Coursera AI Instructions Remover"
+  },
+  "icons": {
+    "16": "icons/icon16.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  }
+}
